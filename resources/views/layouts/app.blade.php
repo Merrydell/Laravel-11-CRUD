@@ -11,6 +11,15 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+        
+        <!-- Custom CSS -->
+        <link href="{{ asset('css/products.css') }}" rel="stylesheet">
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -22,7 +31,7 @@
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <a href="{{ route('dashboard') }}">
+                                <a href="{{ route('products.index') }}">
                                     <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                                 </a>
                             </div>
@@ -31,34 +40,24 @@
                         <!-- Navigation Links -->
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             @auth
-                                <div class="ml-3 relative">
-                                    <x-dropdown align="right" width="48">
-                                        <x-slot name="trigger">
-                                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                <div>{{ Auth::user()->name }}</div>
-                                            </button>
-                                        </x-slot>
-
-                                        <x-slot name="content">
-                                            <x-dropdown-link :href="route('profile.edit')">
-                                                {{ __('Profile') }}
-                                            </x-dropdown-link>
-
-                                            <!-- Authentication -->
-                                            <form method="POST" action="{{ route('logout') }}">
-                                                @csrf
-                                                <x-dropdown-link :href="route('logout')"
-                                                        onclick="event.preventDefault();
-                                                                    this.closest('form').submit();">
-                                                    {{ __('Log Out') }}
-                                                </x-dropdown-link>
-                                            </form>
-                                        </x-slot>
-                                    </x-dropdown>
+                                <div class="flex items-center">
+                                    <span class="text-gray-700 mr-4">{{ Auth::user()->name }}</span>
+                                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-gray-600 hover:text-gray-900">
+                                            Logout
+                                        </button>
+                                    </form>
                                 </div>
                             @else
-                                <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
-                                <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 underline">Register</a>
+                                <div class="flex items-center space-x-4">
+                                    <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-gray-900">
+                                        <i class="bi bi-box-arrow-in-right"></i> Login
+                                    </a>
+                                    <a href="{{ route('register') }}" class="text-sm text-gray-700 hover:text-gray-900">
+                                        <i class="bi bi-person-plus"></i> Register
+                                    </a>
+                                </div>
                             @endauth
                         </div>
                     </div>
@@ -70,5 +69,8 @@
                 @yield('content')
             </main>
         </div>
+
+        <!-- Bootstrap JS Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
