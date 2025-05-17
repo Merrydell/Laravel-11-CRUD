@@ -1,46 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Product</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>View Product
-                            <a href="{{ route('products.index') }}" class="btn btn-danger float-end">Back</a>
-                        </h4>
+@extends('layouts.app')
+
+@section('content')
+<div class="row justify-content-center mt-3">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="float-start">
+                    Product Information
+                </div>
+                <div class="float-end">
+                    <a href="{{ route('products.index') }}" class="btn btn-primary btn-sm">&larr; Back</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3 row">
+                            <label for="code" class="col-md-4 col-form-label text-md-end text-start"><strong>Code:</strong></label>
+                            <div class="col-md-6">
+                                {{ $product->code }}
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="name" class="col-md-4 col-form-label text-md-end text-start"><strong>Name:</strong></label>
+                            <div class="col-md-6">
+                                {{ $product->name }}
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="quantity" class="col-md-4 col-form-label text-md-end text-start"><strong>Quantity:</strong></label>
+                            <div class="col-md-6">
+                                {{ $product->quantity }}
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="price" class="col-md-4 col-form-label text-md-end text-start"><strong>Price:</strong></label>
+                            <div class="col-md-6">
+                                {{ $product->price }}
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="description" class="col-md-4 col-form-label text-md-end text-start"><strong>Description:</strong></label>
+                            <div class="col-md-6">
+                                {{ $product->description }}
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label><strong>Product Code:</strong></label>
-                            <p>{{ $product->code }}</p>
+                    <div class="col-md-6">
+                        @if($product->image)
+                        <div class="text-center">
+                            <img src="{{ $product->image_url }}" alt="Product Image" class="img-fluid rounded" style="max-width: 100%; height: auto; max-height: 300px; object-fit: contain;">
                         </div>
-                        <div class="mb-3">
-                            <label><strong>Product Name:</strong></label>
-                            <p>{{ $product->name }}</p>
+                        @else
+                        <div class="text-center">
+                            <p class="text-muted">No image available</p>
                         </div>
-                        <div class="mb-3">
-                            <label><strong>Quantity:</strong></label>
-                            <p>{{ $product->quantity }}</p>
-                        </div>
-                        <div class="mb-3">
-                            <label><strong>Product Price:</strong></label>
-                            <p>${{ number_format($product->price, 2) }}</p>
-                        </div>
-                        <div class="mb-3">
-                            <label><strong>Product Description:</strong></label>
-                            <p>{{ $product->description }}</p>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html> 
+</div>
+@endsection 

@@ -1,64 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Products
-                            <a href="{{ route('products.create') }}" class="btn btn-primary float-end">Add Product</a>
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        @if(session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif
+@extends('layouts.app')
 
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Description</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($products as $product)
-                                    <tr>
-                                        <td>{{ $product->id }}</td>
-                                        <td>{{ $product->code }}</td>
-                                        <td>{{ $product->name }}</td>
-                                        <td>{{ $product->quantity }}</td>
-                                        <td>${{ number_format($product->price, 2) }}</td>
-                                        <td>{{ Str::limit($product->description, 50) }}</td>
-                                        <td>
-                                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        {{ $products->links() }}
-                    </div>
-                </div>
+@section('content')
+<style>
+    .products-table {
+        width: 100%;
+        min-width: 900px;
+    }
+    .products-table th, .products-table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+    .product-image {
+        max-height: 50px;
+        width: auto;
+        object-fit: contain;
+    }
+</style>
+<div class="container-fluid mt-3">
+    @session('success')
+    <div class="alert alert-success" role="alert">
+        {{ $value }}
+    </div>
+    @endsession
+    <div class="card">
+        <div class="card-header">Product List</div>
+        <div class="card-body">
+            <a href="{{ route('products.create') }}" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Add New Product</a>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered products-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">S#</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($products as $product)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>
+                                @if($product->image)
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="product-image">
+                                @else
+                                    <span class="text-muted">No image</span>
+                                @endif
+                            </td>
+                            <td>{{ $product->code }}</td>
+                            <td>{{ $product->name }}</td>
+                            <td>{{ $product->quantity }}</td>
+                            <td>{{ $product->price }}</td>
+                            <td>
+                                <form action="{{ route('products.destroy', $product->id) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i> Show</a>
+                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i> Edit</a> 
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete this product?');"><i class="bi bi-trash"></i> Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <td colspan="7">
+                            <span class="text-danger">
+                                <strong>No Product Found!</strong>
+                            </span>
+                        </td>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
+            {{ $products->links() }}
         </div>
     </div>
-</body>
-</html> 
+</div>
+@endsection 

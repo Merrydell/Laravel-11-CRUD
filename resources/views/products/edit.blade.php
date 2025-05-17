@@ -1,63 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Edit Product
-                            <a href="{{ route('products.index') }}" class="btn btn-danger float-end">Back</a>
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        @if($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+@extends('layouts.app')
 
-                        <form action="{{ route('products.update', $product->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <div class="mb-3">
-                                <label>Product Code</label>
-                                <input type="text" name="code" value="{{ $product->code }}" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label>Product Name</label>
-                                <input type="text" name="name" value="{{ $product->name }}" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label>Quantity</label>
-                                <input type="number" name="quantity" value="{{ $product->quantity }}" class="form-control" required min="1">
-                            </div>
-                            <div class="mb-3">
-                                <label>Product Price</label>
-                                <input type="number" step="0.01" name="price" value="{{ $product->price }}" class="form-control" required min="0">
-                            </div>
-                            <div class="mb-3">
-                                <label>Product Description</label>
-                                <textarea name="description" class="form-control">{{ $product->description }}</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <button type="submit" class="btn btn-primary">Update Product</button>
-                            </div>
-                        </form>
-                    </div>
+@section('content')
+<div class="row justify-content-center mt-3">
+    <div class="col-md-8">
+        @session('success')
+        <div class="alert alert-success" role="alert">
+            {{ $value }}
+        </div>
+        @endsession
+        <div class="card">
+            <div class="card-header">
+                <div class="float-start">
+                    Edit Product
                 </div>
+                <div class="float-end">
+                    <a href="{{ route('products.index') }}" class="btn btn-primary btn-sm">&larr; Back</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('products.update', $product->id) }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-3 row">
+                        <label for="code" class="col-md-4 col-form-label text-md-end text-start">Code</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control @error('code') is-invalid @enderror" id="code" name="code" value="{{ old('code', $product->code) }}">
+                            @error('code')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="name" class="col-md-4 col-form-label text-md-end text-start">Name</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $product->name) }}">
+                            @error('name')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="quantity" class="col-md-4 col-form-label text-md-end text-start">Quantity</label>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ old('quantity', $product->quantity) }}">
+                            @error('quantity')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="price" class="col-md-4 col-form-label text-md-end text-start">Price</label>
+                        <div class="col-md-6">
+                            <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $product->price) }}">
+                            @error('price')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="description" class="col-md-4 col-form-label text-md-end text-start">Description</label>
+                        <div class="col-md-6">
+                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description">{{ old('description', $product->description) }}</textarea>
+                            @error('description')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="image" class="col-md-4 col-form-label text-md-end text-start">Product Image</label>
+                        <div class="col-md-6">
+                            @if($product->image)
+                            <div class="text-center mb-3">
+                                <img src="{{ $product->image_url }}" alt="Current Product Image" class="img-fluid rounded" style="max-width: 100%; height: auto; max-height: 200px; object-fit: contain;">
+                            </div>
+                            @endif
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
+                            @error('image')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <input type="submit" class="col-md-3 offset-md-5 btn btn-primary" value="Update Product">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</body>
-</html> 
+</div>
+@endsection 
