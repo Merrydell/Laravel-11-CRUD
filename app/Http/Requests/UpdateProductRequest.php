@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 class UpdateProductRequest extends FormRequest
 {
  /**
@@ -19,11 +20,12 @@ class UpdateProductRequest extends FormRequest
  public function rules(): array
  {
  return [
- 'code' => 'required|string|max:50|unique:products,code,'.$this->product->id,
- 'name' => 'required|string|max:250',
- 'quantity' => 'required|integer|min:1|max:10000',
+ 'code' => ['required', 'string', 'max:255', Rule::unique('products')->ignore($this->product)],
+ 'name' => 'required|string|max:255',
+ 'quantity' => 'required|integer|min:0',
  'price' => 'required|numeric|min:0',
- 'description' => 'nullable|string'
+ 'description' => 'nullable|string',
+ 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
  ];
  }
 }
